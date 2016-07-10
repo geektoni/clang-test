@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 3.5)
 project(clang_test)
 
-set(LLVM_PATH /home/uriel/CERN/llvm-3.8.0_clang-3.8.0/build)
-link_directories(${LLVM_PATH}/lib)
-include_directories(${LLVM_PATH}/include)
+set(LLVM_PATH /home/uriel/CERN/llvm-3.8.0_clang-3.8.0/llvm-3.8.0.src)
+set(CLANG_PATH ${LLVM_PATH}/tools/clang)
+
+set(LLVM_BUILD_PATH /home/uriel/CERN/llvm-3.8.0_clang-3.8.0/build)
+set(CLANG_BUILD_PATH ${LLVM_BUILD_PATH}/tools/clang)
+
+link_directories(${LLVM_BUILD_PATH}/lib ${CLANG_BUILD_PATH}/lib)
+include_directories(${LLVM_PATH}/include ${CLANG_PATH}/include)
+include_directories(${CLANG_BUILD_PATH}/include ${LLVM_BUILD_PATH}/include)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti  -Wall -std=c++11")
 
@@ -58,4 +64,3 @@ target_link_libraries(clang_test
         dl
         ${CURSES_LIBRARIES}
         )
-
