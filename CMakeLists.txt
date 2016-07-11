@@ -16,43 +16,83 @@ link_directories(${LLVM_BUILD_PATH}/lib ${CLANG_BUILD_PATH}/lib)
 include_directories(${LLVM_PATH}/include ${CLANG_PATH}/include)
 include_directories(${CLANG_BUILD_PATH}/include ${LLVM_BUILD_PATH}/include)
 
+
 # Set some flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti  -Wall -std=c++11")
-set(CLANG_LIBRARIES clangFrontend
-        clangSerialization
+set(CMAKE_CXX_FLAGS "-fno-rtti -fPIC -fvisibility-inlines-hidden -Wall -W -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -pedantic -Wno-long-long -Wno-maybe-uninitialized -Wno-comment -std=c++11 -ffunction-sections -fdata-sections -g")
+
+# Set libraries required
+set(CLANG_LIBRARIES
+        clangTooling
+        clangFrontendTool
+        clangFrontend
         clangDriver
+        clangSerialization
+        clangCodeGen
         clangParse
         clangSema
         clangAnalysis
-        clangAST
-        clangBasic
         clangEdit
+        clangAST
         clangLex
-        clangTooling)
-set(LLVM_LIBRARIES LLVMX86AsmParser
-        LLVMX86Desc
-        LLVMX86AsmPrinter
-        LLVMX86Info
-        LLVMX86Utils
+        clangBasic)
+set(LLVM_LIBRARIES LLVMLTO
+        LLVMObjCARCOpts
+        LLVMLinker
         LLVMipo
-        LLVMScalarOpts
-        LLVMInstCombine
-        LLVMTransformUtils
-        LLVMAnalysis
-        LLVMTarget
+        LLVMVectorize
+        LLVMBitWriter
+        LLVMIRReader
+        LLVMAsmParser
+        LLVMTableGen
         LLVMOption
-        LLVMMCParser
-        LLVMMC
+        LLVMX86Disassembler
+        LLVMX86AsmParser
+        LLVMX86CodeGen
+        LLVMSelectionDAG
+        LLVMAsmPrinter
+        LLVMX86Desc
+        LLVMMCDisassembler
+        LLVMX86Info
+        LLVMX86AsmPrinter
+        LLVMX86Utils
+        LLVMMCJIT
+        LLVMDebugInfoDWARF
+        LLVMLineEditor
+        LLVMInstrumentation
+        LLVMInterpreter
+        LLVMCodeGen
+        LLVMTarget
+        LLVMScalarOpts
+        LLVMProfileData
+        LLVMInstCombine
+        LLVMOrcJIT
+        LLVMTransformUtils
+        #LLVMipa
+        LLVMAnalysis
+        LLVMRuntimeDyld
+        LLVMExecutionEngine
         LLVMObject
+        LLVMMCParser
         LLVMBitReader
+        LLVMMC
         LLVMCore
-        LLVMSupport)
-set(ALL_LIBRARIES ${CLANG_LIBRARIES} ${LLVM_LIBRARIES})
+        LLVMSupport
+        )
+
+include(FindCurses)
+set(OTHER_LIBRARIES  pthread
+        #z
+        dl
+        ${CURSES_LIBRARIES})
+
+set(ALL_LIBRARIES ${CLANG_LIBRARIES} ${LLVM_LIBRARIES} ${OTHER_LIBRARIES})
 
 # Adds definitions to the compiler command line
 add_definitions(
-        -D__STDC_LIMIT_MACROS
+        -D_GNU_SOURCE
         -D__STDC_CONSTANT_MACROS
+        -D__STDC_FORMAT_MACROS
+        -D__STDC_LIMIT_MACROS
 )
 
 # Set source files and set final target name.
@@ -63,10 +103,4 @@ add_executable(preprocessor_test src/preprocessorTest.cpp)
 target_link_libraries(clang_test ${ALL_LIBRARIES})
 target_link_libraries(preprocessor_test ${ALL_LIBRARIES})
 
-include(FindCurses)
-target_link_libraries(clang_test
-        pthread
-        #z
-        dl
-        ${CURSES_LIBRARIES}
-        )
+
