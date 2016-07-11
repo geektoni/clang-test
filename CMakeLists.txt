@@ -18,20 +18,7 @@ include_directories(${CLANG_BUILD_PATH}/include ${LLVM_BUILD_PATH}/include)
 
 # Set some flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti  -Wall -std=c++11")
-
-# Adds definitions to the compiler command line
-add_definitions(
-        -D__STDC_LIMIT_MACROS
-        -D__STDC_CONSTANT_MACROS
-)
-
-# Set source files and set final target name.
-set(SOURCE_FILES src/main.cpp)
-add_executable(clang_test ${SOURCE_FILES})
-
-# Specify libraries or flags to use when linking a given target.
-target_link_libraries(clang_test
-        clangFrontend
+set(CLANG_LIBRARIES clangFrontend
         clangSerialization
         clangDriver
         clangParse
@@ -41,30 +28,40 @@ target_link_libraries(clang_test
         clangBasic
         clangEdit
         clangLex
-        clangTooling
-        )
-
-target_link_libraries(clang_test
-        LLVMX86AsmParser # MC, MCParser, Support, X86Desc, X86Info
-        LLVMX86Desc # MC, Support, X86AsmPrinter, X86Info
-        LLVMX86AsmPrinter # MC, Support, X86Utils
-        LLVMX86Info # MC, Support, Target
-        LLVMX86Utils # Core, Support
+        clangTooling)
+set(LLVM_LIBRARIES LLVMX86AsmParser
+        LLVMX86Desc
+        LLVMX86AsmPrinter
+        LLVMX86Info
+        LLVMX86Utils
         LLVMipo
         LLVMScalarOpts
         LLVMInstCombine
         LLVMTransformUtils
-        #LLVMipa
         LLVMAnalysis
         LLVMTarget
-        LLVMOption # Support
-        LLVMMCParser # MC, Support
-        LLVMMC # Object, Support
-        LLVMObject # BitReader, Core, Support
-        LLVMBitReader # Core, Support
-        LLVMCore # Support
-        LLVMSupport
-        )
+        LLVMOption
+        LLVMMCParser
+        LLVMMC
+        LLVMObject
+        LLVMBitReader
+        LLVMCore
+        LLVMSupport)
+set(ALL_LIBRARIES ${CLANG_LIBRARIES} ${LLVM_LIBRARIES})
+
+# Adds definitions to the compiler command line
+add_definitions(
+        -D__STDC_LIMIT_MACROS
+        -D__STDC_CONSTANT_MACROS
+)
+
+# Set source files and set final target name.
+add_executable(clang_test src/main.cpp)
+add_executable(preprocessor_test src/preprocessorTest.cpp)
+
+# Specify libraries or flags to use when linking a given target.
+target_link_libraries(clang_test ${ALL_LIBRARIES})
+target_link_libraries(preprocessor_test ${ALL_LIBRARIES})
 
 include(FindCurses)
 target_link_libraries(clang_test
