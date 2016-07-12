@@ -96,11 +96,11 @@ add_definitions(
 )
 
 # Set source files and set final target name.
-add_executable(clang_test src/main.cpp)
-add_executable(preprocessor_test src/preprocessorTest.cpp)
+add_executable(ASTGenerator src/astGenerator.cpp);
+add_executable(preprocessor src/preprocessorTest.cpp)
 
 # Specify libraries or flags to use when linking a given target.
-target_link_libraries(clang_test ${ALL_LIBRARIES})
-target_link_libraries(preprocessor_test ${ALL_LIBRARIES})
+target_link_libraries(ASTGenerator ${ALL_LIBRARIES})
+target_link_libraries(preprocessor ${ALL_LIBRARIES})
 
 

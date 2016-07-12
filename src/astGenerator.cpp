@@ -1,4 +1,7 @@
 //
+// Created by uriel on 12/07/16.
+//
+//
 // Test the clang preprocessor.
 // Created by uriel on 10/07/16.
 //
@@ -53,9 +56,9 @@ int main(int argc, char ** argv) {
     TargetInfo * target = TargetInfo::CreateTargetInfo(*diags, triple);
     HeaderSearch * Headers = new HeaderSearch(HeaderOpts, *SM, *diags, *opts, target);
     Headers->getHeaderSearchOpts().AddPath("/usr/include/c++/4.9",
-                                            clang::frontend::Angled,
-                                            false,
-                                            false);
+                                           clang::frontend::Angled,
+                                           false,
+                                           false);
     Headers->getHeaderSearchOpts().AddPath("/usr/include/c++/4.9/tr1",
                                            clang::frontend::Angled,
                                            false,
@@ -65,13 +68,13 @@ int main(int argc, char ** argv) {
                                            false,
                                            false);
     Headers->getHeaderSearchOpts().AddPath("/usr/include/x86_64-linux-gnu/c++/4.9",
-                                            clang::frontend::Angled,
-                                            false,
-                                            false);
+                                           clang::frontend::Angled,
+                                           false,
+                                           false);
     Headers->getHeaderSearchOpts().AddPath("/usr/include/x86_64-linux-gnu/",
-                                            clang::frontend::Angled,
-                                            false,
-                                            false);
+                                           clang::frontend::Angled,
+                                           false,
+                                           false);
     Headers->getHeaderSearchOpts().AddPath("/usr/include",
                                            clang::frontend::Angled,
                                            false,
@@ -104,21 +107,30 @@ int main(int argc, char ** argv) {
             SM->createFileID( pFile, *SL, clang::SrcMgr::C_User)
     );
 
-    preprocessor->EnterMainSourceFile();
+    // Parse tokens and generate AST
+    clang::IdentifierTable identifierTable(*opts);
+    clang::SelectorTable * selectorTable = new SelectorTable();
+
+    Builtin::Context * contextBuiltin = new Builtin::Context();
+    contextBuiltin->InitializeTarget(*target, nullptr);
+    ASTContext * astContext = new ASTContext(
+            *opts,
+            *SM,
+            identifierTable,
+            *selectorTable,
+            *contextBuiltin);
+    astContext->InitBuiltinTypes(*target);
+    ASTConsumer * astConsumer = new ASTConsumer();
+
+    Sema *sema = new Sema(
+            *preprocessor,
+            *astContext,
+            *astConsumer
+    );
+
     pTextDiagnosticPrinter->BeginSourceFile(*opts, preprocessor);
-
-    // Tokenize and dump tokens to stdout
-    Token * token = new Token();
-    do {
-        preprocessor->Lex(*token);
-        if(diags->hasErrorOccurred())
-        {
-            break;
-        }
-        preprocessor->DumpToken(*token);
-        std::cerr << std::endl;
-    } while(token->isNot(clang::tok::eof));
+    ParseAST(*preprocessor, astConsumer, *astContext);
     pTextDiagnosticPrinter->EndSourceFile();
-
+    identifierTable.PrintStats();
     return 0;
 }
