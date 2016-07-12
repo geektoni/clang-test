@@ -23,8 +23,7 @@ using namespace clang;
 int main(int argc, char ** argv) {
 
     // Preprocessor Options
-    PreprocessorOptions * PPOptions = new PreprocessorOptions();
-    llvm::IntrusiveRefCntPtr<PreprocessorOptions> PPOpts = PPOptions;
+    llvm::IntrusiveRefCntPtr<PreprocessorOptions> PPOpts(new PreprocessorOptions);
 
     // Diagnostic Engine
     llvm::IntrusiveRefCntPtr<DiagnosticIDs> Diags = new DiagnosticIDs();
@@ -35,25 +34,64 @@ int main(int argc, char ** argv) {
 
     // Language options
     LangOptions * opts = new LangOptions();
+    opts->CPlusPlus = 1;
 
     // Source file manager
     FileSystemOptions * optionsFilesystem = new FileSystemOptions();
     FileManager * FM = new FileManager(*optionsFilesystem);
     SourceManager * SM = new SourceManager(*diags, *FM);
 
-    // Header search
+    // Header search initialization and add header path
     llvm::IntrusiveRefCntPtr<HeaderSearchOptions> HeaderOpts = new HeaderSearchOptions();
+
     TargetOptions * systemTriple = new TargetOptions();
     systemTriple->Triple = llvm::sys::getDefaultTargetTriple();
     std::shared_ptr<TargetOptions> triple (systemTriple);
     TargetInfo * target = TargetInfo::CreateTargetInfo(*diags, triple);
     HeaderSearch * Headers = new HeaderSearch(HeaderOpts, *SM, *diags, *opts, target);
+    Headers->getHeaderSearchOpts().AddPath("/usr/include/c++/4.9",
+                                            clang::frontend::Angled,
+                                            false,
+                                            false);
+    Headers->getHeaderSearchOpts().AddPath("/usr/include/c++/4.9/tr1",
+                                           clang::frontend::Angled,
+                                           false,
+                                           false);
+    Headers->getHeaderSearchOpts().AddPath("/usr/include/linux",
+                                           clang::frontend::Angled,
+                                           false,
+                                           false);
+    Headers->getHeaderSearchOpts().AddPath("/usr/include/x86_64-linux-gnu/c++/4.9",
+                                            clang::frontend::Angled,
+                                            false,
+                                            false);
+    Headers->getHeaderSearchOpts().AddPath("/usr/include/x86_64-linux-gnu/",
+                                            clang::frontend::Angled,
+                                            false,
+                                            false);
+    Headers->getHeaderSearchOpts().AddPath("/usr/include",
+                                           clang::frontend::Angled,
+                                           false,
+                                           false);
+
+    clang::ApplyHeaderSearchOptions(*Headers,
+                                    Headers->getHeaderSearchOpts(),
+                                    *opts,
+                                    target->getTriple());
 
     // Module loader
     CompilerInstance * loader = new CompilerInstance();
 
     // Create the preprocessor
     clang::Preprocessor * preprocessor = new clang::Preprocessor(PPOpts, *diags, *opts, *SM, *Headers, *loader);
+
+    preprocessor->Initialize(*target);
+    clang::FrontendOptions frontendOptions;
+    clang::InitializePreprocessor(
+            *preprocessor,
+            *PPOpts,
+            *(new RawPCHContainerReader()),
+            frontendOptions);
 
 
     // Get the file, open it and set up preprocessor
@@ -63,6 +101,7 @@ int main(int argc, char ** argv) {
             SM->createFileID( pFile, *SL, clang::SrcMgr::C_User)
     );
     preprocessor->EnterMainSourceFile();
+    pTextDiagnosticPrinter->BeginSourceFile(*opts, preprocessor);
 
     // Tokenize and dump tokens to stdout
     Token * token = new Token();
@@ -75,6 +114,7 @@ int main(int argc, char ** argv) {
         preprocessor->DumpToken(*token);
         std::cerr << std::endl;
     } while(token->isNot(clang::tok::eof));
+    pTextDiagnosticPrinter->EndSourceFile();
 
     return 0;
 }
