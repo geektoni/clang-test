@@ -854,7 +854,6 @@ int main(int argc, char ** argv) {
 
     pTextDiagnosticPrinter->BeginSourceFile(*opts, preprocessor);
     PreprocessorOutputOptions * PPOOpts = new PreprocessorOutputOptions();
-    PPOOpts->ShowMacros=1;
     PPOOpts->ShowCPP=1;
     DoPrintPreprocessedInput(*preprocessor, &llvm::outs(), *PPOOpts);
     pTextDiagnosticPrinter->EndSourceFile();
