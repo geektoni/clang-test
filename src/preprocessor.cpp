@@ -1,11 +1,6 @@
 //
 // Created by uriel on 13/07/16.
 //
-
-//
-// Test the clang preprocessor.
-// Created by uriel on 10/07/16.
-//
 #include "clang/Lex/ModuleLoader.h"
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Basic/DiagnosticOptions.h"
