@@ -16,6 +16,8 @@ link_directories(${LLVM_BUILD_PATH}/lib ${CLANG_BUILD_PATH}/lib)
 include_directories(${LLVM_PATH}/include ${CLANG_PATH}/include)
 include_directories(${CLANG_BUILD_PATH}/include ${LLVM_BUILD_PATH}/include)
 
+# Set bin path
+set(CMAKE_BINARY_DIR, ../bin)
 
 # Set some flags
 set(CMAKE_CXX_FLAGS "-fno-rtti -fPIC -fvisibility-inlines-hidden -Wall -W -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -pedantic -Wno-long-long -Wno-maybe-uninitialized -Wno-comment -std=c++11 -ffunction-sections -fdata-sections -g")
@@ -96,13 +98,13 @@ add_definitions(
 )
 
 # Set source files and set final target name.
-add_executable(ASTGenerator src/astGenerator.cpp)
-add_executable(preprocessor src/preprocessorTest.cpp)
-add_executable(preprocessorE src/preprocessorOutput.cpp lib/PrintPPOutputPPCallbacks.cpp)
+add_executable(ASTStatsPrinter src/ASTStatsPrinter.cpp)
+add_executable(tokenPrinter src/tokenPrinter.cpp)
+add_executable(preprocessor src/preprocessor.cpp lib/PrintPPOutputPPCallbacks.cpp)
 
 # Specify libraries or flags to use when linking a given target.
-target_link_libraries(ASTGenerator ${ALL_LIBRARIES})
+target_link_libraries(ASTStatsPrinter ${ALL_LIBRARIES})
+target_link_libraries(tokenPrinter ${ALL_LIBRARIES})
 target_link_libraries(preprocessor ${ALL_LIBRARIES})
-target_link_libraries(preprocessorE ${ALL_LIBRARIES})
 
 
