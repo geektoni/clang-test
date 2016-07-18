@@ -3,21 +3,16 @@
 //
 #include "clang/Lex/ModuleLoader.h"
 #include "clang/Basic/Diagnostic.h"
-#include "clang/Basic/DiagnosticOptions.h"
-#include "clang/Basic/DiagnosticIDs.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 #include "clang/Basic/LangOptions.h"
-#include "clang/Basic/FileManager.h"
 #include "clang/Lex/Preprocessor.h"
 #include "clang/Lex/PreprocessorOptions.h"
 #include "clang/Lex/HeaderSearch.h"
 #include "clang/Lex/HeaderSearchOptions.h"
 #include "clang/Frontend/CompilerInstance.h"
-#include "clang/Basic/LLVM.h"
 #include "clang/Basic/TargetInfo.h"
 #include "clang/Parse/ParseAST.h"
 #include <iostream>
-#include <cstdio>
 #include <clang/AST/ASTContext.h>
 #include "clang/Sema/Sema.h"
 
