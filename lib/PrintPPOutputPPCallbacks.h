@@ -122,6 +122,9 @@ class PrintPPOutputPPCallbacks : public PPCallbacks {
                             const MacroDefinition &MD) override;
 };
 
+// Pragma are directive that are used to access compiler-specific preprocessor extension.
+// For example, #pragma once is equivalent to an include guard, because it tells the compiler
+// to include a header file only once.
 struct UnknownPragmaHandler : public PragmaHandler {
     const char *Prefix;
     PrintPPOutputPPCallbacks *Callbacks;
