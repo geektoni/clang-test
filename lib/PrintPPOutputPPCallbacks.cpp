@@ -57,12 +57,14 @@ void PrintMacroDefinition(const IdentifierInfo &II, const MacroInfo &MI,
     }
 }
 
+/// WriteLineInfo - Write a #line directive or GNU line marker 'that specifies the
+/// original line number and source file name for subsequent input in the current
+/// preprocessor input file' (depending on what mode we are in).
 void PrintPPOutputPPCallbacks::WriteLineInfo(unsigned LineNo,
                                              const char *Extra,
                                              unsigned ExtraLen) {
     startNewLineIfNeeded(/*ShouldUpdateCurrentLine=*/false);
 
-    // Emit #line directives or GNU line markers depending on what mode we're in.
     if (UseLineDirective) {
         OS << "#line" << ' ' << LineNo << ' ' << '"';
         OS.write_escaped(CurFilename);
@@ -112,6 +114,8 @@ bool PrintPPOutputPPCallbacks::MoveToLine(unsigned LineNo) {
     return true;
 }
 
+/// startNewLineIfNeeded - Add a \n char if we need to start a new line. It also
+/// update the current line number.
 bool
 PrintPPOutputPPCallbacks::startNewLineIfNeeded(bool ShouldUpdateCurrentLine) {
     if (EmittedTokensOnThisLine || EmittedDirectiveOnThisLine) {
@@ -195,6 +199,10 @@ void PrintPPOutputPPCallbacks::FileChanged(SourceLocation Loc,
     }
 }
 
+/// InclusionDirective - Callback invoked whenever an inclusion directive
+/// of any kind (#include, #import, etc.) has been processed, regardless
+/// of whether the inclusion will actually result in an inclusion (taken from
+/// Clang Doxygen documentation )
 void PrintPPOutputPPCallbacks::InclusionDirective(SourceLocation HashLoc,
                                                   const Token &IncludeTok,
                                                   StringRef FileName,
@@ -220,7 +228,7 @@ void PrintPPOutputPPCallbacks::InclusionDirective(SourceLocation HashLoc,
 }
 
 /// Ident - Handle #ident directives when read by the preprocessor.
-///
+/// $(what) is the meaning ot #ident??????
 void PrintPPOutputPPCallbacks::Ident(SourceLocation Loc, StringRef str) {
     MoveToLine(Loc);
 
@@ -243,6 +251,7 @@ void PrintPPOutputPPCallbacks::MacroDefined(const Token &MacroNameTok,
     setEmittedDirectiveOnThisLine();
 }
 
+/// MacroUndefined - Hook called whenever a macro #undef is seen.
 void PrintPPOutputPPCallbacks::MacroUndefined(const Token &MacroNameTok,
                                               const MacroDefinition &MD) {
     // Only print out macro definitions in -dD mode.
@@ -266,6 +275,13 @@ static void outputPrintable(llvm::raw_ostream& OS,
             << (char)('0'+ ((Char >> 0) & 7));
     }
 }
+
+/**
+ * Begin of #pragma specific handler
+ * The definition of these methods are the same
+ * of clang doxygen documentation. They are also pretty
+ * self-explanatory.
+ **/
 
 void PrintPPOutputPPCallbacks::PragmaMessage(SourceLocation Loc,
                                              StringRef Namespace,
@@ -379,6 +395,8 @@ void PrintPPOutputPPCallbacks::PragmaWarningPop(SourceLocation Loc) {
     OS << "#pragma warning(pop)";
     setEmittedDirectiveOnThisLine();
 }
+
+/** End of #pragma specific handlers **/
 
 /// HandleFirstTokOnLine - When emitting a preprocessed file in -E mode, this
 /// is called for the first token on each new line.  If this really is the start
