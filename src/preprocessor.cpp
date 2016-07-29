@@ -217,6 +217,8 @@ int main(int argc, char ** argv) {
     systemTriple->Triple = llvm::sys::getDefaultTargetTriple();
     std::shared_ptr<TargetOptions> triple (systemTriple);
     TargetInfo * target = TargetInfo::CreateTargetInfo(*diags, triple);
+
+    // These are system dependent. They works under Ubuntu 16.04
     HeaderSearch * Headers = new HeaderSearch(HeaderOpts, *SM, *diags, *opts, target);
     Headers->getHeaderSearchOpts().AddPath("/usr/include/c++/4.9",
                                            clang::frontend::Angled,
@@ -270,6 +272,7 @@ int main(int argc, char ** argv) {
             SM->createFileID( pFile, *SL, clang::SrcMgr::C_User)
     );
 
+    // Set up diagnostic, set up PPOptions and run the preprocessor
     pTextDiagnosticPrinter->BeginSourceFile(*opts, preprocessor);
     PreprocessorOutputOptions * PPOOpts = new PreprocessorOutputOptions();
     PPOOpts->ShowCPP=1;
