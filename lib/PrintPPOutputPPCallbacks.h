@@ -33,7 +33,7 @@ class PrintPPOutputPPCallbacks : public PPCallbacks {
     public:
         raw_ostream &OS;
     private:
-        unsigned CurLine;
+        unsigned CurLine; //Current line
 
         bool EmittedTokensOnThisLine;
         bool EmittedDirectiveOnThisLine;
