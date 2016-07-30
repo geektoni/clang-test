@@ -115,8 +115,15 @@ int main(int argc, char ** argv) {
         {
             break;
         }
+
+        // Print location for every token
+        token->getLocation().print(llvm::outs(), *SM);
+        std::cerr << std::endl;
+
+        // Print the token
         preprocessor->DumpToken(*token);
         std::cerr << std::endl;
+
     } while(token->isNot(clang::tok::eof));
     pTextDiagnosticPrinter->EndSourceFile();
 
