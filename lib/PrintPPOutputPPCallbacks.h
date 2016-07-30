@@ -24,6 +24,8 @@
 
 using namespace clang;
 
+/// PrintPPOutputPPCallbacks - Class that implements all the method
+/// used to do preprocessing printing.
 class PrintPPOutputPPCallbacks : public PPCallbacks {
     Preprocessor &PP;
     SourceManager &SM;
@@ -159,5 +161,17 @@ struct UnknownPragmaHandler : public PragmaHandler {
 void PrintMacroDefinition(const IdentifierInfo &II, const MacroInfo &MI,
                                  Preprocessor &PP, raw_ostream &OS);
 
+typedef std::pair<const IdentifierInfo *, MacroInfo *> id_macro_pair;
+static int MacroIDCompare(const id_macro_pair *LHS, const id_macro_pair *RHS) {
+    return LHS->first->getName().compare(RHS->first->getName());
+}
+
+static void PrintPreprocessedTokens(Preprocessor &PP, Token &Tok,
+                                    PrintPPOutputPPCallbacks *Callbacks,
+                                    raw_ostream &OS);
+
+static void DoPrintMacros(Preprocessor &PP, raw_ostream *OS);
+void clang::DoPrintPreprocessedInput(Preprocessor &PP, raw_ostream *OS,
+                                     const PreprocessorOutputOptions &Opts);
 
 #endif //CLANG_TEST_PRINTPPOUTPUTPPCALLBACKS_H
