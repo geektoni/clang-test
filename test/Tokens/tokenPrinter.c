@@ -2,7 +2,7 @@
 // Created by uriel on 26/08/16.
 //
 
-// RUN: ./../build/tokenPrinter %s
+// RUN: ../../build/tokenPrinter %s
 
 int a=3;
 

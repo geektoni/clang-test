@@ -1,0 +1,1 @@
+set -o pipefail;{ ../../build/tokenPrinter /home/uriel/Projects/clang-test/test/Tokens/tokenPrinter.c; }

@@ -98,6 +98,11 @@ int main(int argc, char ** argv) {
 
 
     // Get the file, open it and set up preprocessor
+    if (argc <= 1) {
+      std::perror("Missing file to parse");
+      return 1;
+    }
+
     const FileEntry * pFile = FM->getFile(argv[1]);
     SourceLocation * SL = new SourceLocation();
     SM->setMainFileID(
