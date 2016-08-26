@@ -1,7 +1,7 @@
 //
 // Check if the preprocessor work.
 //
-// RUN: ./../build/preprocessor %s | grep 'int'
+// RUN: ../../build/preprocessor %s | grep 'int'
 
 int a=3;
 
