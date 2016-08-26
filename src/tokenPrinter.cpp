@@ -111,14 +111,9 @@ int main(int argc, char ** argv) {
     Token * token = new Token();
     do {
         preprocessor->Lex(*token);
-        if(diags->hasErrorOccurred())
-        {
+        if(diags->hasErrorOccurred()) {
             break;
         }
-
-        // Print location for every token
-        token->getLocation().print(llvm::outs(), *SM);
-        std::cerr << std::endl;
 
         // Print the token
         preprocessor->DumpToken(*token);
