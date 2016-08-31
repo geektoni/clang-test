@@ -101,10 +101,11 @@ add_definitions(
 add_executable(ASTStatsPrinter src/ASTStatsPrinter.cpp)
 add_executable(tokenPrinter src/tokenPrinter.cpp)
 add_executable(preprocessor src/preprocessor.cpp lib/PrintPPOutputPPCallbacks.cpp)
+add_executable(driver src/Driver.cpp)
 
 # Specify libraries or flags to use when linking a given target.
 target_link_libraries(ASTStatsPrinter ${ALL_LIBRARIES})
 target_link_libraries(tokenPrinter ${ALL_LIBRARIES})
 target_link_libraries(preprocessor ${ALL_LIBRARIES})
-
+target_link_libraries(driver ${ALL_LIBRARIES})
 
