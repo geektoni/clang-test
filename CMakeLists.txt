@@ -23,7 +23,7 @@ set(CMAKE_BINARY_DIR, ../bin)
 set(CMAKE_CXX_FLAGS "-fno-rtti -fPIC -fvisibility-inlines-hidden -Wall -W -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -pedantic -Wno-long-long -Wno-maybe-uninitialized -Wno-comment -std=c++11 -ffunction-sections -fdata-sections -g")
 
 # Set libraries required
-set(CLANG_LIBRARIES
+set (CLANG_LIBRARIES
         clangTooling
         clangFrontendTool
         clangFrontend
@@ -32,11 +32,18 @@ set(CLANG_LIBRARIES
         clangCodeGen
         clangParse
         clangSema
+        clangStaticAnalyzerFrontend
+        clangStaticAnalyzerCheckers
+        clangStaticAnalyzerCore
         clangAnalysis
+        clangARCMigrate
+        clangRewriteFrontend
+        clangRewrite
         clangEdit
         clangAST
         clangLex
         clangBasic)
+
 set(LLVM_LIBRARIES LLVMLTO
         LLVMObjCARCOpts
         LLVMLinker
