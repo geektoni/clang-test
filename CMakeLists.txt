@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+
 project(clang_test)
 
 # Set the LLVM and Clang source code path
@@ -15,9 +16,6 @@ link_directories(${LLVM_BUILD_PATH}/lib ${CLANG_BUILD_PATH}/lib)
 # Include path in which to search to resolve #include directive
 include_directories(${LLVM_PATH}/include ${CLANG_PATH}/include)
 include_directories(${CLANG_BUILD_PATH}/include ${LLVM_BUILD_PATH}/include)
-
-# Set bin path
-set(CMAKE_BINARY_DIR, ../bin)
 
 # Set some flags
 set(CMAKE_CXX_FLAGS "-fno-rtti -fPIC -fvisibility-inlines-hidden -Wall -W -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -pedantic -Wno-long-long -Wno-maybe-uninitialized -Wno-comment -std=c++11 -ffunction-sections -fdata-sections -g")
@@ -103,6 +101,9 @@ add_definitions(
         -D__STDC_FORMAT_MACROS
         -D__STDC_LIMIT_MACROS
 )
+
+# Set target install directory
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin )
 
 # Set source files and set final target name.
 add_executable(ASTStatsPrinter src/ASTStatsPrinter.cpp)
