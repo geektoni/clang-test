@@ -1,1 +1,1 @@
-set -o pipefail;{ ../../build/preprocessor; }
+set -o pipefail;{ ../../bin/preprocessor; }

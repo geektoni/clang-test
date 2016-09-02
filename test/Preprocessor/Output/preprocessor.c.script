@@ -1,1 +1,1 @@
-set -o pipefail;{ ../../build/preprocessor /home/uriel/Projects/clang-test/test/Preprocessor/preprocessor.c | grep 'int'; }
+set -o pipefail;{ ../../bin/preprocessor /home/uriel/Projects/clang-test/test/Preprocessor/preprocessor.c | grep 'int'; }
