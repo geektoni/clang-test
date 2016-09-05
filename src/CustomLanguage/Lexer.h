@@ -12,11 +12,11 @@ class Lexer {
 private:
     Token currentToken;
 public:
-    Lexer();
+    Lexer() {};
     ~Lexer();
     Token getTok();
     Token getNextToken();
-    Token getBufferedToken() { return buffer; }
+    Token getBufferedToken() { return currentToken; }
 };
 
 

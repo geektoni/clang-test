@@ -5,7 +5,7 @@
 #ifndef CLANG_TEST_TOKEN_H
 #define CLANG_TEST_TOKEN_H
 
-#include <cstring>
+#include <string>
 
 // Possible token types
 // TODO: Add value type (for example, int a instead of only a)
@@ -28,9 +28,9 @@ private:
     std::string Value;
 
 public:
-    Token();
+    Token() {};
     Token(TokType type, std::string value) : Type(type), Value(value) {};
-    Type getType() {return Type;}
+    TokType getType() {return Type;}
     std::string getValue() {return Value;}
     void setType(TokType t) {Type = t;}
     void setValue(std::string v) {Value = v;}

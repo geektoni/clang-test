@@ -2,7 +2,10 @@
 // Created by uriel on 05/09/16.
 //
 
+#include <memory>
+#include <llvm/ADT/STLExtras.h>
 #include "Parser.h"
+#include "Lexer.h"
 #include "Token.h"
 
 // Private methods //
@@ -20,40 +23,40 @@ std::unique_ptr<ExprAST> Parser::ParseNumberExpr(Token token) {
   return std::move(result);
 }
 
-std::unique_prt<ExprAST> Parser::ParseParenExpr() {
-  lexer.getNextToken();
-  auto V = ParseExpression();
+std::unique_ptr<ExprAST> Parser::ParseParenExpr() {
+  lexer->getNextToken();
+  auto V = ParseExpression(lexer->getBufferedToken());
   if (!V)
     return nullptr;
-  if (lexer->getBufferedToken().getValue() != ')') {
+  if (lexer->getBufferedToken().getValue() != ")") {
     return LogError("expected ')'");
   }
-  lexer.getNextToken();
+  lexer->getNextToken();
   return V;
 }
 
 std::unique_ptr<ExprAST> Parser::ParseIdentifierExpr(Token token) {
-  td::string IdName = token.getValue();
+  std::string IdName = token.getValue();
 
   lexer->getNextToken();  // eat identifier.
 
-  if (lexer->getBufferedToken().getValue() != '(') // Simple variable ref.
+  if (lexer->getBufferedToken().getValue() != "(") // Simple variable ref.
     return llvm::make_unique<VariableExprAST>(IdName);
 
   // Call.
   lexer->getNextToken();  // eat (
   std::vector<std::unique_ptr<ExprAST>> Args;
-  if (lexer->getBufferedToken().getValue() != ')') {
+  if (lexer->getBufferedToken().getValue() != ")") {
     while (1) {
-      if (auto Arg = ParseExpression())
+      if (auto Arg = ParseExpression(lexer->getBufferedToken()))
         Args.push_back(std::move(Arg));
       else
         return nullptr;
 
-      if (lexer->getBufferedToken().getValue() == ')')
+      if (lexer->getBufferedToken().getValue() == ")")
         break;
 
-      if (lexer->getBufferedToken().getValue() != ',')
+      if (lexer->getBufferedToken().getValue() != ",")
         return LogError("Expected ')' or ',' in argument list");
       lexer->getNextToken();
     }
@@ -72,7 +75,7 @@ std::unique_ptr<ExprAST> Parser::ParsePrimary(Token token) {
     case tok_number:
       return ParseNumberExpr(token);
     case tok_undef_char:
-      if (token.getValue() == '(')
+      if (token.getValue() == "(")
         return ParseParenExpr();
       break;
     default:
@@ -84,7 +87,8 @@ std::unique_ptr<ExprAST> Parser::ParseExpression(Token token) {
   auto LHS = ParsePrimary(token);
   if (!LHS)
     return nullptr;
-  return ParseBinOpRHS(0, std::move(LHS), token);
+  //return ParseBinOpRHS(0, std::move(LHS), token);
+  return nullptr;
 }
 
 std::unique_ptr<PrototypeAST> Parser::ParsePrototype(Token token) {
@@ -94,7 +98,7 @@ std::unique_ptr<PrototypeAST> Parser::ParsePrototype(Token token) {
   std::string FnName = token.getValue();
   lexer->getNextToken();
 
-  if (lexer->getBufferedToken().getValue() != '(')
+  if (lexer->getBufferedToken().getValue() != "(")
     return LogErrorP("Expected '(' in prototype");
 
   // Read the list of argument names.
@@ -103,11 +107,11 @@ std::unique_ptr<PrototypeAST> Parser::ParsePrototype(Token token) {
 
   while (lexer->getBufferedToken().getType() == tok_identifier)
     ArgNames.push_back(lexer->getBufferedToken().getValue());
-  if (lexer->getBufferedToken().getValue() != ')')
+  if (lexer->getBufferedToken().getValue() != ")")
     return LogErrorP("Expected ')' in prototype");
 
   // success.
-  getNextToken();  // eat ')'.
+  lexer->getNextToken();  // eat ')'.
 
   return llvm::make_unique<PrototypeAST>(FnName, std::move(ArgNames));
 }
@@ -125,11 +129,11 @@ std::unique_ptr<FunctionAST> Parser::ParseDefinition() {
 
 std::unique_ptr<PrototypeAST> Parser::ParseExtern() {
   lexer->getNextToken();
-  return ParsePrototype();
+  return ParsePrototype(lexer->getBufferedToken());
 }
 
 std::unique_ptr<FunctionAST> Parser::ParseTopLevelExpr() {
-  if (auto E = ParseExpression()) {
+  if (auto E = ParseExpression(lexer->getBufferedToken())) {
     // Make an anonymous proto.
     auto Proto = llvm::make_unique<PrototypeAST>("", std::vector<std::string>());
     return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));

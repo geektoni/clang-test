@@ -5,6 +5,8 @@
 #ifndef CLANG_TEST_PARSER_H
 #define CLANG_TEST_PARSER_H
 
+#include <map>
+#include <memory>
 #include "AST.h"
 #include "Lexer.h"
 
@@ -24,7 +26,8 @@ private:
       return nullptr;
     }
     std::unique_ptr<PrototypeAST> LogErrorP(const char * message) {
-      return LogError(message);
+      LogError(message);
+      return nullptr;
     }
 
     // Helper method
@@ -32,23 +35,23 @@ private:
 
 public:
     Parser() {initializeLexer();}
-    Parser(Lexer lexer) : lexer(lexer) {}
+    Parser(Lexer lexer) : lexer(&lexer) {}
 
     // Parsing methods
     std::unique_ptr<ExprAST> ParseNumberExpr(Token token);
-    std::unique_prt<ExprAST> ParseParenExpr();
+    std::unique_ptr<ExprAST> ParseParenExpr();
     std::unique_ptr<ExprAST> ParseIdentifierExpr(Token token);
     std::unique_ptr<ExprAST> ParsePrimary(Token token);
     std::unique_ptr<ExprAST> ParseExpression(Token token);
     std::unique_ptr<ExprAST> ParseBinOpRHS(int ExprPrec,
                                            std::unique_ptr<ExprAST> LHS);
-    std::unique_ptr<PrototypeAST> ParsePrototype();
+    std::unique_ptr<PrototypeAST> ParsePrototype(Token token);
     std::unique_ptr<FunctionAST> ParseDefinition();
     std::unique_ptr<PrototypeAST> ParseExtern();
     std::unique_ptr<FunctionAST> ParseTopLevelExpr();
 
     // Helper methods
-    int getTokPrecedence(Token token);
+    int getTokPrecedence();
     Lexer * getLexer() {return lexer;}
     Token getTokenFromLexer() {return lexer->getBufferedToken();}
 };

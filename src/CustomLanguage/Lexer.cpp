@@ -3,6 +3,7 @@
 //
 
 #include "Lexer.h"
+#include "Token.h"
 
 // Get the next token from standard input
 Token Lexer::getTok() {
@@ -21,16 +22,12 @@ Token Lexer::getTok() {
     while (isalnum((LastChar = getchar())))
       tokenValue += LastChar;
 
-    switch (tokenValue){
-      case "def":
-        tmp.setType(tok_def);
-        break;
-      case "extern":
-        tmp.setType(tok_extern);
-        break;
-      default:
-        tmp.setType(tok_identifier);
-      break;
+    if (tokenValue == "def") {
+      tmp.setType(tok_def);
+    } else if(tokenValue == "extern") {
+      tmp.setType(tok_extern);
+    } else {
+      tmp.setType(tok_identifier);
     }
 
     tmp.setValue(tokenValue);
@@ -45,10 +42,11 @@ Token Lexer::getTok() {
     } while (isdigit(LastChar) || LastChar == '.');
     tmp.setValue(tokenValue);
     tmp.setType(tok_number);
+    return tmp;
   }
 
   // Skip comments TODO: Add multi-line comments
-  if (LastChar == "#") {
+  if (LastChar == '#') {
     do {
       LastChar = getchar();
     } while (LastChar != EOF
@@ -56,21 +54,23 @@ Token Lexer::getTok() {
              && LastChar != '\r');
 
     if (LastChar != EOF) {
-      return gettok();
+      return getTok();
     }
   }
 
   // Check if EOF
   if (LastChar == EOF) {
-    tmp.setValue(EOF);
+    tmp.setValue('\0');
     tmp.setType(tok_eof);
+    return tmp;
   }
 
   // Handle different values
-  tmp.setValue(LastChar);
+  tokenValue += LastChar;
+  tmp.setValue(tokenValue);
   tmp.setType(tok_undef_char);
 
-  return Token;
+  return tmp;
 }
 
 // Implement a simple token buffer

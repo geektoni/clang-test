@@ -6,6 +6,9 @@
 #ifndef CLANG_TEST_AST_H
 #define CLANG_TEST_AST_H
 
+#include <memory>
+#include <vector>
+
 // Basic AST class. Everything else inherit from here
 class ExprAST {
 public:
@@ -39,7 +42,7 @@ public:
 // Class for function calls
 class CallExprAST : public ExprAST {
     std::string Callee;
-    std::vector<std::unique_pointer<ExprAST>> Args;
+    std::vector<std::unique_ptr<ExprAST>> Args;
 public:
     CallExprAST(const std::string &Callee,
                 std::vector<std::unique_ptr<ExprAST>> Args)

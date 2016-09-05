@@ -10,7 +10,7 @@ void MainLoop(Parser * parser) {
     switch(parser->getTokenFromLexer().getType()) {
       case tok_eof:
         return;
-      case ";":
+      case tok_undef_char:
         parser->getLexer()->getNextToken();
         break;
       case tok_def:
