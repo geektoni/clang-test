@@ -31,7 +31,8 @@ private:
     void initializeLexer();
 
 public:
-    Parser(Lexer lexer) : lexer(lexer) {initializeLexer();}
+    Parser() {initializeLexer();}
+    Parser(Lexer lexer) : lexer(lexer) {}
 
     // Parsing methods
     std::unique_ptr<ExprAST> ParseNumberExpr(Token token);
@@ -48,6 +49,8 @@ public:
 
     // Helper methods
     int getTokPrecedence(Token token);
+    Lexer * getLexer() {return lexer;}
+    Token getTokenFromLexer() {return lexer->getBufferedToken();}
 };
 
 
