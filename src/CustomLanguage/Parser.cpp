@@ -81,6 +81,7 @@ std::unique_ptr<ExprAST> Parser::ParsePrimary(Token token) {
     default:
       return LogError("Unknown token when expecting an expression");
   }
+  return nullptr;
 }
 
 std::unique_ptr<ExprAST> Parser::ParseExpression(Token token) {
@@ -103,9 +104,7 @@ std::unique_ptr<PrototypeAST> Parser::ParsePrototype(Token token) {
 
   // Read the list of argument names.
   std::vector<std::string> ArgNames;
-  lexer->getNextToken();
-
-  while (lexer->getBufferedToken().getType() == tok_identifier)
+  while (lexer->getNextToken().getType() == tok_identifier)
     ArgNames.push_back(lexer->getBufferedToken().getValue());
   if (lexer->getBufferedToken().getValue() != ")")
     return LogErrorP("Expected ')' in prototype");
