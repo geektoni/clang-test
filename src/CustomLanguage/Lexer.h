@@ -11,6 +11,7 @@
 class Lexer {
 private:
     Token currentToken;
+    int LastChar = ' ';
 public:
     Lexer() {};
     ~Lexer();

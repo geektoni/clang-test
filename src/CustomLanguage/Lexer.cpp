@@ -10,7 +10,6 @@ Token Lexer::getTok() {
 
   Token tmp;
   std::string tokenValue;
-  int LastChar = ' ';
 
   // Jump whitespaces
   while(isspace(LastChar))
@@ -66,9 +65,10 @@ Token Lexer::getTok() {
   }
 
   // Handle different values
-  tokenValue += LastChar;
+  tokenValue = LastChar;
   tmp.setValue(tokenValue);
   tmp.setType(tok_undef_char);
+  LastChar = getchar();
 
   return tmp;
 }
