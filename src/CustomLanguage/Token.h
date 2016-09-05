@@ -8,6 +8,7 @@
 #include <cstring>
 
 // Possible token types
+// TODO: Add value type (for example, int a instead of only a)
 enum TokType {
     tok_eof = -1,
     tok_def = -2,
