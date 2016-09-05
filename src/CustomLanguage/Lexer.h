@@ -9,11 +9,14 @@
 #include "Token.h"
 
 class Lexer {
-
+private:
+    Token currentToken;
 public:
     Lexer();
     ~Lexer();
-    Token gettok();
+    Token getTok();
+    Token getNextToken();
+    Token getBufferedToken() { return buffer; }
 };
 
 

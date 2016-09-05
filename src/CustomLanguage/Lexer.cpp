@@ -5,7 +5,7 @@
 #include "Lexer.h"
 
 // Get the next token from standard input
-Token Lexer::gettok() {
+Token Lexer::getTok() {
 
   Token tmp;
   std::string tokenValue;
@@ -71,4 +71,9 @@ Token Lexer::gettok() {
   tmp.setType(tok_undef_char);
 
   return Token;
+}
+
+// Implement a simple token buffer
+Token Lexer::getNextToken() {
+  return this->currentToken = getTok();
 }
