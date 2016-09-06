@@ -5,8 +5,6 @@
 #include "Parser.h"
 
 #include "llvm/Support/Signals.h"
-#include "llvm/Support/PrettyStackTrace.h"
-#include "llvm/Support/ManagedStatic.h"
 
 void MainLoop(Parser * parser) {
   while(1) {
