@@ -18,6 +18,57 @@ void Parser::initializeLexer() {
 
 /*********************/
 
+void Parser::parse() {
+  while(1) {
+    switch(getTokenFromLexer().getType()) {
+      case tok_eof:
+        return;
+      case tok_semicolon:
+        fprintf(stderr, "ready> ");
+        getLexer()->getNextToken();
+        break;
+      case tok_def:
+        if (auto FnAST = ParseDefinition()) {
+          if (auto *FnIR = FnAST->codegen()) {
+            fprintf(stderr, "Read function definition:");
+            FnIR->dump();
+          }
+        } else {
+          // Skip token for error recovery.
+          getLexer()->getNextToken();
+        }
+        break;
+      case tok_extern:
+        if (auto ExtAST = ParseExtern()) {
+          if (auto *ExtIR = ExtAST->codegen()) {
+            fprintf(stderr, "Parsed an extern\n");
+            ExtIR->dump();
+          }
+        } else {
+          // Skip token for error recovery.
+          getLexer()->getNextToken();
+        }
+        break;
+      case tok_identifier:
+      case tok_number:
+        if (auto TopAST = ParseTopLevelExpr()) {
+          if (auto * TopIR = TopAST->codegen()) {
+            fprintf(stderr, "Parsed a top-level expr\n");
+            TopIR->dump();
+          }
+        } else {
+          // Skip token for error recovery.
+          getLexer()->getNextToken();
+        }
+        break;
+      default:
+        fprintf(stderr, "ready> ");
+        getLexer()->getNextToken();
+        break;
+    }
+  }
+}
+
 std::unique_ptr<ExprAST> Parser::ParseNumberExpr(Token token) {
   auto result = llvm::make_unique<NumberExprAST>(strtod(
           token.getValue().c_str(), 0));

@@ -35,8 +35,13 @@ private:
     void initializeBinOpPrec();
 
 public:
+
+    // Constructors
     Parser() {initializeLexer(); initializeBinOpPrec();}
     Parser(Lexer lexer) : lexer(&lexer) {initializeBinOpPrec();}
+
+    // Main Loop
+    void parse();
 
     // Parsing methods
     std::unique_ptr<ExprAST> ParseNumberExpr(Token token);
