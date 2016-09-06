@@ -10,11 +10,14 @@
 #include "AST.h"
 #include "Lexer.h"
 
+/* TO DO LIST
+ * TODO: Every statement must finish with a ;. If not it will cause a parser error;
+ */
+
 
 class Parser {
 private:
 
-    //TODO: method to generate the lexer
     Lexer * lexer;
 
     // Binary operation precedence
