@@ -10,6 +10,7 @@ void MainLoop(Parser * parser) {
       case tok_eof:
         return;
       case tok_semicolon:
+        fprintf(stderr, "ready> ");
         parser->getLexer()->getNextToken();
         break;
       case tok_def:
@@ -28,7 +29,7 @@ void MainLoop(Parser * parser) {
           parser->getLexer()->getNextToken();
         }
         break;
-      default:
+      case tok_identifier:
         if (parser->ParseTopLevelExpr()) {
           fprintf(stderr, "Parsed a top-level expr\n");
         } else {
@@ -36,8 +37,11 @@ void MainLoop(Parser * parser) {
           parser->getLexer()->getNextToken();
         }
         break;
+      default:
+        fprintf(stderr, "ready> ");
+        parser->getLexer()->getNextToken();
+        break;
     }
-    fprintf(stderr, "ready> ");
   }
 }
 
