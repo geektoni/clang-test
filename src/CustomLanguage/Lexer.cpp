@@ -67,6 +67,10 @@ Token Lexer::getTok() {
   tmp.setValue(tokenValue);
   if (tokenValue == ";") {
     tmp.setType(tok_semicolon);
+  } else if (tokenValue == "(") {
+    tmp.setType(tok_left_bracket);
+  } else if (tokenValue == ")") {
+    tmp.setType(tok_right_bracket);
   } else {
     tmp.setType(tok_undef_char);
   }

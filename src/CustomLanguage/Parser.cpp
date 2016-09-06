@@ -5,10 +5,6 @@
 #include <memory>
 #include <llvm/ADT/STLExtras.h>
 #include "Parser.h"
-#include "Lexer.h"
-#include "Token.h"
-
-
 
 // Private methods //
 
@@ -51,6 +47,7 @@ void Parser::parse() {
         break;
       case tok_identifier:
       case tok_number:
+      case tok_left_bracket:
         if (auto TopAST = ParseTopLevelExpr()) {
           if (auto * TopIR = TopAST->codegen()) {
             fprintf(stderr, "Parsed a top-level expr\n");
@@ -81,7 +78,7 @@ std::unique_ptr<ExprAST> Parser::ParseParenExpr() {
   auto V = ParseExpression(lexer->getBufferedToken());
   if (!V)
     return nullptr;
-  if (lexer->getBufferedToken().getValue() != ")") {
+  if (lexer->getBufferedToken().getType() != tok_right_bracket) {
     return LogError("expected ')'");
   }
   lexer->getNextToken();
@@ -93,20 +90,20 @@ std::unique_ptr<ExprAST> Parser::ParseIdentifierExpr(Token token) {
 
   lexer->getNextToken();  // eat identifier.
 
-  if (lexer->getBufferedToken().getValue() != "(") // Simple variable ref.
+  if (lexer->getBufferedToken().getType() != tok_left_bracket) // Simple variable ref.
     return llvm::make_unique<VariableExprAST>(IdName);
 
   // Call.
   lexer->getNextToken();  // eat (
   std::vector<std::unique_ptr<ExprAST>> Args;
-  if (lexer->getBufferedToken().getValue() != ")") {
+  if (lexer->getBufferedToken().getType() != tok_right_bracket) {
     while (1) {
       if (auto Arg = ParseExpression(lexer->getBufferedToken()))
         Args.push_back(std::move(Arg));
       else
         return nullptr;
 
-      if (lexer->getBufferedToken().getValue() == ")")
+      if (lexer->getBufferedToken().getType() == tok_right_bracket)
         break;
 
       if (lexer->getBufferedToken().getValue() != ",")
@@ -127,10 +124,8 @@ std::unique_ptr<ExprAST> Parser::ParsePrimary(Token token) {
       return ParseIdentifierExpr(token);
     case tok_number:
       return ParseNumberExpr(token);
-    case tok_undef_char:
-      if (token.getValue() == "(")
-        return ParseParenExpr();
-      break;
+    case tok_left_bracket:
+      return ParseParenExpr();
     default:
       return LogError("Unknown token when expecting an expression");
   }
@@ -151,14 +146,14 @@ std::unique_ptr<PrototypeAST> Parser::ParsePrototype(Token token) {
   std::string FnName = token.getValue();
   lexer->getNextToken();
 
-  if (lexer->getBufferedToken().getValue() != "(")
+  if (lexer->getBufferedToken().getType() != tok_left_bracket)
     return LogErrorP("Expected '(' in prototype");
 
   // Read the list of argument names.
   std::vector<std::string> ArgNames;
   while (lexer->getNextToken().getType() == tok_identifier)
     ArgNames.push_back(lexer->getBufferedToken().getValue());
-  if (lexer->getBufferedToken().getValue() != ")")
+  if (lexer->getBufferedToken().getType() != tok_right_bracket)
     return LogErrorP("Expected ')' in prototype");
 
   // success.
