@@ -40,6 +40,7 @@ void MainLoop(Parser * parser) {
         }
         break;
       case tok_identifier:
+      case tok_number:
         if (auto TopAST = parser->ParseTopLevelExpr()) {
           if (auto * TopIR = TopAST->codegen()) {
             fprintf(stderr, "Parsed a top-level expr\n");
