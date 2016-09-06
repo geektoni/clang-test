@@ -8,6 +8,8 @@
 #include "Lexer.h"
 #include "Token.h"
 
+
+
 // Private methods //
 
 void Parser::initializeLexer() {
@@ -88,8 +90,7 @@ std::unique_ptr<ExprAST> Parser::ParseExpression(Token token) {
   auto LHS = ParsePrimary(token);
   if (!LHS)
     return nullptr;
-  //return ParseBinOpRHS(0, std::move(LHS), token);
-  return nullptr;
+  return ParseBinOpRHS(0, std::move(LHS));
 }
 
 std::unique_ptr<PrototypeAST> Parser::ParsePrototype(Token token) {
@@ -140,19 +141,20 @@ std::unique_ptr<FunctionAST> Parser::ParseTopLevelExpr() {
   return nullptr;
 }
 
-/*std::unique_ptr<ExprAST> Parser::ParseBinOpRHS(int ExprPrec,
-                                               std::unique_ptr<ExprAST> LHS,
-                                               Token token) {
+std::unique_ptr<ExprAST> Parser::ParseBinOpRHS(int ExprPrec,
+                                               std::unique_ptr<ExprAST> LHS) {
   while(1) {
-    int TokPrec = getTokPrecedence(token);
+    int TokPrec = getTokPrecedence();
     if (TokPrec < ExprPrec)
       return LHS;
 
-    auto RHS = ParsePrimary(getNextToken());
+    std::string BinOp = lexer->getBufferedToken().getValue();
+
+    auto RHS = ParsePrimary(lexer->getNextToken());
     if (!RHS)
       return nullptr;
 
-    int NextPrec = GetTokPrecedence();
+    int NextPrec = getTokPrecedence();
     if (TokPrec < NextPrec) {
       RHS = ParseBinOpRHS(TokPrec + 1, std::move(RHS));
       if (!RHS)
@@ -160,10 +162,10 @@ std::unique_ptr<FunctionAST> Parser::ParseTopLevelExpr() {
     }
 
     // Merge LHS/RHS.
-    LHS = helper::make_unique<BinaryExprAST>(BinOp, std::move(LHS),
+    LHS = llvm::make_unique<BinaryExprAST>(BinOp.c_str()[0], std::move(LHS),
                                              std::move(RHS));
   }
-}*/
+}
 
 // Helper methods
 int Parser::getTokPrecedence() {
@@ -177,4 +179,11 @@ int Parser::getTokPrecedence() {
     return -1;
   }
   return tokenPrecedence;
+}
+
+void Parser::initializeBinOpPrec() {
+  this->BinaryOperationPrecedence['>'] = 10;
+  this->BinaryOperationPrecedence['+'] = 20;
+  this->BinaryOperationPrecedence['-'] = 30;
+  this->BinaryOperationPrecedence['*'] = 40;
 }

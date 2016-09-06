@@ -32,10 +32,11 @@ private:
 
     // Helper method
     void initializeLexer();
+    void initializeBinOpPrec();
 
 public:
-    Parser() {initializeLexer();}
-    Parser(Lexer lexer) : lexer(&lexer) {}
+    Parser() {initializeLexer(); initializeBinOpPrec();}
+    Parser(Lexer lexer) : lexer(&lexer) {initializeBinOpPrec();}
 
     // Parsing methods
     std::unique_ptr<ExprAST> ParseNumberExpr(Token token);

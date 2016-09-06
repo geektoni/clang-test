@@ -15,7 +15,8 @@ enum TokType {
     tok_extern = -3,
     tok_identifier = -4,
     tok_number = -5,
-    tok_undef_char = -6
+    tok_undef_char = -6,
+    tok_semicolon = -7
 };
 
 // Class that define a Token

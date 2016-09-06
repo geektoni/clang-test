@@ -25,7 +25,7 @@ Token Lexer::getTok() {
       tmp.setType(tok_def);
     } else if(tokenValue == "extern") {
       tmp.setType(tok_extern);
-    } else {
+    }else {
       tmp.setType(tok_identifier);
     }
 
@@ -59,7 +59,6 @@ Token Lexer::getTok() {
 
   // Check if EOF
   if (LastChar == EOF) {
-    tmp.setValue('\0');
     tmp.setType(tok_eof);
     return tmp;
   }
@@ -67,7 +66,11 @@ Token Lexer::getTok() {
   // Handle different values
   tokenValue = LastChar;
   tmp.setValue(tokenValue);
-  tmp.setType(tok_undef_char);
+  if (tokenValue == ";") {
+    tmp.setType(tok_semicolon);
+  } else {
+    tmp.setType(tok_undef_char);
+  }
   LastChar = getchar();
 
   return tmp;

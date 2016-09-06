@@ -6,11 +6,10 @@
 
 void MainLoop(Parser * parser) {
   while(1) {
-    fprintf(stderr, "ready> ");
     switch(parser->getTokenFromLexer().getType()) {
       case tok_eof:
         return;
-      case tok_undef_char:
+      case tok_semicolon:
         parser->getLexer()->getNextToken();
         break;
       case tok_def:
@@ -38,6 +37,7 @@ void MainLoop(Parser * parser) {
         }
         break;
     }
+    fprintf(stderr, "ready> ");
   }
 }
 
