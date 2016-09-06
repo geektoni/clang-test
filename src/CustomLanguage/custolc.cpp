@@ -4,6 +4,10 @@
 #include "Token.h"
 #include "Parser.h"
 
+#include "llvm/Support/Signals.h"
+#include "llvm/Support/PrettyStackTrace.h"
+#include "llvm/Support/ManagedStatic.h"
+
 void MainLoop(Parser * parser) {
   while(1) {
     switch(parser->getTokenFromLexer().getType()) {
@@ -14,24 +18,33 @@ void MainLoop(Parser * parser) {
         parser->getLexer()->getNextToken();
         break;
       case tok_def:
-        if (parser->ParseDefinition()) {
-          fprintf(stderr, "Parsed a function definition.\n");
+        if (auto FnAST = parser->ParseDefinition()) {
+          if (auto *FnIR = FnAST->codegen()) {
+            fprintf(stderr, "Read function definition:");
+            FnIR->dump();
+          }
         } else {
           // Skip token for error recovery.
           parser->getLexer()->getNextToken();
         }
         break;
       case tok_extern:
-        if (parser->ParseExtern()) {
-          fprintf(stderr, "Parsed an extern\n");
+        if (auto ExtAST = parser->ParseExtern()) {
+          if (auto *ExtIR = ExtAST->codegen()) {
+            fprintf(stderr, "Parsed an extern\n");
+            ExtIR->dump();
+          }
         } else {
           // Skip token for error recovery.
           parser->getLexer()->getNextToken();
         }
         break;
       case tok_identifier:
-        if (parser->ParseTopLevelExpr()) {
-          fprintf(stderr, "Parsed a top-level expr\n");
+        if (auto TopAST = parser->ParseTopLevelExpr()) {
+          if (auto * TopIR = TopAST->codegen()) {
+            fprintf(stderr, "Parsed a top-level expr\n");
+            TopIR->dump();
+          }
         } else {
           // Skip token for error recovery.
           parser->getLexer()->getNextToken();
@@ -46,6 +59,8 @@ void MainLoop(Parser * parser) {
 }
 
 int main() {
+
+  llvm::sys::PrintStackTraceOnErrorSignal();
 
   Parser * P = new Parser();
   fprintf(stderr, "ready> ");

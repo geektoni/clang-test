@@ -3,7 +3,6 @@
 //
 
 #include "Lexer.h"
-#include "Token.h"
 
 // Get the next token from standard input
 Token Lexer::getTok() {
