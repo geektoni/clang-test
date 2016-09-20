@@ -4,7 +4,7 @@
 
 #include <memory>
 #include <llvm/ADT/STLExtras.h>
-#include "Parser.h"
+#include "../include/Parser.h"
 
 // Private methods //
 

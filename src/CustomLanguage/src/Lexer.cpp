@@ -2,7 +2,7 @@
 // Created by uriel on 05/09/16.
 //
 
-#include "Lexer.h"
+#include "../include/Lexer.h"
 
 // Get the next token from standard input
 Token Lexer::getTok() {

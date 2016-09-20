@@ -1,7 +1,7 @@
 //
 // Created by uriel on 06/09/16.
 //
-#include "AST.h"
+#include "../include/AST.h"
 
 using namespace llvm;
 
