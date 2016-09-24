@@ -112,7 +112,7 @@ add_executable(preprocessor src/preprocessor.cpp lib/PrintPPOutputPPCallbacks.cp
 add_executable(driver src/Driver.cpp)
 add_executable(custolc src/CustomLanguage/custolc.cpp src/CustomLanguage/src/Lexer.cpp src/CustomLanguage/src/Parser.cpp
         src/CustomLanguage/src/AST.cpp)
-add_executable(errors src/ErrorDisplay.cpp)
+add_executable(errors src/ErrorDisplay.cpp src/BugReporter/CrashReporter.cpp src/BugReporter/CrashReporter.h)
 
 # Specify libraries or flags to use when linking a given target.
 target_link_libraries(ASTStatsPrinter ${ALL_LIBRARIES})
