@@ -8,6 +8,7 @@
 #include <llvm/Support/FileSystem.h>
 #include "CrashHandler.h"
 #include "StackTraceCHAction.h"
+#include "PrintDiagnosticCHAction.h"
 
 using namespace llvm;
 
@@ -28,20 +29,9 @@ void llvm::handleCrashSignalWrapper(void*){
   llvm::CrashHandler CR;
 
   std::vector<CHAction*> actions;
+  actions.push_back(new PrintDiagnosticCHAction);
   actions.push_back(new StackTraceCHAction);
 
   CR.makeChain(actions);
   CR.execute();
 }
-
-/*void CrashHandler::handleCrashSignal() {
-  fprintf(stderr, "A FATAL ERROR HAS OCCURRED\n"
-          "Please, send this file below to http://somesite.com to report the error:\n");
-
-  llvm::SmallString<128> Path;
-  generateStackTraceFile(Path);
-  fprintf(stderr, Path.c_str());
-  fprintf(stderr, "\n");
-
-  exit(1);
-}*/
