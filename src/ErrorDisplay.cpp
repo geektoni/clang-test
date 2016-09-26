@@ -5,7 +5,7 @@
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Support/Signals.h>
 #include <llvm/Support/FileSystem.h>
-#include "BugReporter/CrashReporter.h"
+#include "BugReporter/CrashHandler.h"
 
 
 
@@ -17,6 +17,7 @@ int main(int argc, char ** argv) {
   // Generate a segmentation fault.
   int array[1] = {0};
   int a = array[2000000];
+  printf("%i", a); // Only to avoid compiler warning
   // Pretty stupid? Yeah, you got that right man.
 
   return 0;

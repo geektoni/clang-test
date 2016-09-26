@@ -5,21 +5,24 @@
 #ifndef CLANG_TEST_CRASHREPORTER_H
 #define CLANG_TEST_CRASHREPORTER_H
 
-
 #include <system_error>
 #include <llvm/ADT/StringRef.h>
 #include <llvm/ADT/SmallString.h>
+#include "CHAction.h"
 
 namespace llvm {
 
-    class CrashReporter {
+    class CrashHandler {
+    private:
+        std::vector<CHAction*> actions;
 
     public:
-        CrashReporter();
+        CrashHandler();
 
-        void handleCrashSignal();
-        void generateStackTraceFile(SmallString<128> &ResultPath);
+        void execute();
+        void makeChain(std::vector<CHAction*> actions);
 
+        //void handleCrashSignal();
 
     };
     void handleCrashSignalWrapper(void*);
