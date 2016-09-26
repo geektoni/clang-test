@@ -21,6 +21,7 @@ namespace llvm {
 
         void execute();
         void makeChain(std::vector<CHAction*> actions);
+        void dumpChain();
 
     };
     void handleCrashSignalWrapper(void*);

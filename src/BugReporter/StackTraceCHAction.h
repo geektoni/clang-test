@@ -10,6 +10,7 @@
 class StackTraceCHAction : public CHAction  {
 
 public:
+    StackTraceCHAction(char * description) {this->description = description;}
     virtual void run();
 
 };

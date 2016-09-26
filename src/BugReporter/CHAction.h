@@ -7,8 +7,13 @@
 
 
 class CHAction {
+
 public:
     virtual void run();
+    virtual char * dump() {return description;}
+
+protected:
+    char * description;
 
 };
 
