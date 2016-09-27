@@ -11,7 +11,7 @@ class PrintDiagnosticCHAction : public CHAction {
 
 public:
     PrintDiagnosticCHAction(char * description) {this->description = description;}
-    virtual void run();
+    virtual void run(Result res);
 };
 
 

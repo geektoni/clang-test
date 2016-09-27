@@ -4,4 +4,4 @@
 
 #include "CHAction.h"
 
-void CHAction::run() {}
+void CHAction::run(Result res) {}

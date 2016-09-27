@@ -6,9 +6,8 @@
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Support/FileSystem.h>
 #include "StackTraceCHAction.h"
-#include "Result.h"
 
-void StackTraceCHAction::run() {
+void StackTraceCHAction::run(Result res) {
   int FD = -1;
   std::error_code EC;
   llvm::SmallString<128> Path;
@@ -21,6 +20,6 @@ void StackTraceCHAction::run() {
   llvm::raw_fd_ostream tmp(FD, true);
   llvm::sys::PrintStackTrace(tmp);
 
-  Result::instance()->add(Path);
+  res->push_back(Path);
 
 }

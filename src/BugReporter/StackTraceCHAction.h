@@ -11,9 +11,8 @@ class StackTraceCHAction : public CHAction  {
 
 public:
     StackTraceCHAction(char * description) {this->description = description;}
-    virtual void run();
+    virtual void run(Result res);
 
 };
-
 
 #endif //CLANG_TEST_STACKTRACECHACTION_H
