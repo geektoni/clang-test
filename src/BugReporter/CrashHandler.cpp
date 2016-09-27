@@ -9,6 +9,7 @@
 #include "CrashHandler.h"
 #include "StackTraceCHAction.h"
 #include "PrintDiagnosticCHAction.h"
+#include "Result.h"
 
 using namespace llvm;
 
@@ -33,12 +34,14 @@ void CrashHandler::dumpChain() {
 void llvm::handleCrashSignalWrapper(void*){
   llvm::CrashHandler CR;
 
+  Result::instance();
+
   std::vector<CHAction*> actions;
-  actions.push_back(new PrintDiagnosticCHAction("Print diagnostic information"));
   actions.push_back(new StackTraceCHAction("Print stacktrace to file"));
+  actions.push_back(new PrintDiagnosticCHAction("Print diagnostic information"));
 
   CR.makeChain(actions);
   CR.execute();
-  CR.dumpChain();
+  //CR.dumpChain(); DEBUG
   exit(1);
 }
