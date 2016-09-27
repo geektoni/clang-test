@@ -27,7 +27,7 @@ void CrashHandler::makeChain(std::vector<CHAction*> act) {
 
 void CrashHandler::dumpChain() {
   for (unsigned int i=0; i<actions.size(); i++) {
-    fprintf(stderr,"{%i}: %s\n", i, actions[i]->dump());
+    llvm::errs() << i<< ": " << actions[i]->dump() << "\n";
   }
 }
 

@@ -15,7 +15,7 @@ void StackTraceCHAction::run() {
 
   EC = llvm::sys::fs::createTemporaryFile("StackTrace", "result",FD, Path);
   if (EC) {
-    fprintf(stderr, "Error while creating StackTrace diagnostic file.");
+    llvm::errs() << "Error while creating StackTrace diagnostic file.\n";
     exit(1);
   }
   llvm::raw_fd_ostream tmp(FD, true);
