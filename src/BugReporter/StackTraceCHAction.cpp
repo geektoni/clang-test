@@ -7,7 +7,7 @@
 #include <llvm/Support/FileSystem.h>
 #include "StackTraceCHAction.h"
 
-void StackTraceCHAction::run(Result res) {
+void StackTraceCHAction::run(CHResult * res) {
   int FD = -1;
   std::error_code EC;
   llvm::SmallString<128> Path;

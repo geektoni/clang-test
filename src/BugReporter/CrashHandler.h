@@ -15,7 +15,7 @@ namespace llvm {
     class CrashHandler {
     private:
         std::vector<CHAction*> actions;
-        Result res = new std::vector<llvm::SmallString<128>>;
+        CHResult * res = new std::vector<llvm::SmallString<128>>;
 
     public:
         CrashHandler();
