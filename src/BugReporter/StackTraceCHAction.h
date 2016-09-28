@@ -10,7 +10,7 @@
 class StackTraceCHAction : public CHAction  {
 
 public:
-    StackTraceCHAction(char * description) {this->description = description;}
+    StackTraceCHAction(llvm::SmallString<128> description) {this->description = description;}
     virtual void run(CHResult * res);
 
 };

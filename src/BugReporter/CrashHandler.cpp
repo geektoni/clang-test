@@ -34,8 +34,8 @@ void llvm::handleCrashSignalWrapper(void*){
   llvm::CrashHandler CR;
 
   std::vector<CHAction*> actions;
-  actions.push_back(new StackTraceCHAction("Print stacktrace to file"));
-  actions.push_back(new PrintDiagnosticCHAction("Print diagnostic information"));
+  actions.push_back(new StackTraceCHAction(SmallString<128>("Print stacktrace to file")));
+  actions.push_back(new PrintDiagnosticCHAction(SmallString<128>("Print diagnostic information")));
 
   CR.makeChain(actions);
   CR.execute();

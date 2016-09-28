@@ -6,17 +6,16 @@
 #define CLANG_TEST_CHACTION_H
 
 #include <llvm/ADT/SmallString.h>
-using namespace llvm;
-typedef std::vector<SmallString<128>> CHResult;
+typedef std::vector<llvm::SmallString<128>> CHResult;
 
 class CHAction {
 
 public:
     virtual void run(CHResult * res);
-    virtual char * dump() {return description;}
+    virtual llvm::SmallString<128> dump() {return description;}
 
 protected:
-    char * description;
+    llvm::SmallString<128> description;
 
 };
 
