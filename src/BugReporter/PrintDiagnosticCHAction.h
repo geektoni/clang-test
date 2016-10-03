@@ -11,7 +11,7 @@ class PrintDiagnosticCHAction : public CHAction {
 
 public:
     PrintDiagnosticCHAction(llvm::SmallString<128> description) {this->description = description;}
-    virtual void run(CHResult * res);
+    virtual void run(CHResult_t * res);
 };
 
 
