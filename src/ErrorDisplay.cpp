@@ -11,7 +11,7 @@
 
 int main(int argc, char ** argv) {
 
-  void (*PS)(void*) = llvm::handleCrashSignalWrapper;
+  void (*PS)(void*) = cling::handleCrashSignalWrapper;
   llvm::sys::AddSignalHandler(PS, nullptr);
 
   // Generate a segmentation fault.

@@ -10,7 +10,7 @@
 #include <llvm/ADT/SmallString.h>
 #include "CHAction.h"
 
-namespace llvm {
+namespace cling {
 
     class CrashHandler {
     private:

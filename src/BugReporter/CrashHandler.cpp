@@ -10,6 +10,7 @@
 #include "StackTraceCHAction.h"
 #include "PrintDiagnosticCHAction.h"
 
+using namespace cling;
 using namespace llvm;
 
 CrashHandler::CrashHandler() {}
@@ -30,8 +31,8 @@ void CrashHandler::dumpChain() {
   }
 }
 
-void llvm::handleCrashSignalWrapper(void*){
-  llvm::CrashHandler CR;
+void cling::handleCrashSignalWrapper(void*){
+  CrashHandler CR;
 
   std::vector<CHAction*> actions;
   actions.push_back(new StackTraceCHAction(SmallString<128>("Print stacktrace to file")));
