@@ -2,8 +2,8 @@
 // Created by uriel on 26/09/16.
 //
 
-#ifndef CLANG_TEST_CHACTION_H
-#define CLANG_TEST_CHACTION_H
+#ifndef CLING_CHACTION_H
+#define CLING_CHACTION_H
 
 #include <llvm/ADT/SmallString.h>
 #include <map>
@@ -23,4 +23,4 @@ protected:
 };
 
 
-#endif //CLANG_TEST_CHACTION_H
+#endif //CLING_CHACTION_H

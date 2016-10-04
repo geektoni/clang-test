@@ -2,8 +2,8 @@
 // Created by uriel on 24/09/16.
 //
 
-#ifndef CLANG_TEST_CRASHREPORTER_H
-#define CLANG_TEST_CRASHREPORTER_H
+#ifndef CLING_CRASHHANDLER_H
+#define CLING_CRASHHANDLER_H
 
 #include <system_error>
 #include <llvm/ADT/StringRef.h>
@@ -29,4 +29,4 @@ namespace llvm {
 }
 
 
-#endif //CLANG_TEST_CRASHREPORTER_H
+#endif //CLING_CRASHHANDLER_H
