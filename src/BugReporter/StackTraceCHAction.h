@@ -7,6 +7,7 @@
 
 #include "CHAction.h"
 
+/// \brief Print the stacktrace to a temporary file
 class StackTraceCHAction : public CHAction  {
 
 public:

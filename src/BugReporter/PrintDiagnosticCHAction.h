@@ -7,6 +7,7 @@
 
 #include "CHAction.h"
 
+/// \brief Prind diagnostic informations (stacktrace file, where to report the error etc.)
 class PrintDiagnosticCHAction : public CHAction {
 
 public:

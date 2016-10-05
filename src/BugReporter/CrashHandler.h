@@ -12,6 +12,8 @@
 
 namespace cling {
 
+    /// \brief Main Crash Handler that manages the CHActions chains
+    /// and execute all run methods.
     class CrashHandler {
     private:
         std::vector<CHAction*> actions;
@@ -20,11 +22,18 @@ namespace cling {
     public:
         CrashHandler();
 
+        /// \brief Execute the CHAction chain
         void execute();
+
+        /// \brief Add a new CHAction chain
         void makeChain(std::vector<CHAction*> actions);
+
+        /// \brief Dump the chain description
         void dumpChain();
 
     };
+
+    /// \brief Helper function to initialize everything
     void handleCrashSignalWrapper(void*);
 }
 
