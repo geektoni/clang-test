@@ -9,10 +9,12 @@
 
 
 
-int main(int argc, char ** argv) {
+int main(int argc, char * argv[]) {
 
-  void (*PS)(void*) = cling::handleCrashSignalWrapper;
-  llvm::sys::AddSignalHandler(PS, nullptr);
+  if (strcmp("-d", argv[1])==0) {
+    void (*PS)(void*) = cling::handleCrashSignalWrapper;
+    llvm::sys::AddSignalHandler(PS, nullptr);
+  }
 
   // Generate a segmentation fault.
   int array[1] = {0};
