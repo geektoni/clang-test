@@ -9,6 +9,7 @@
 #include "CrashHandler.h"
 #include "StackTraceCHAction.h"
 #include "PrintDiagnosticCHAction.h"
+#include "CreateIntTestCHAction.h"
 
 using namespace cling;
 using namespace llvm;
@@ -36,6 +37,7 @@ void cling::handleCrashSignalWrapper(void*){
 
   std::vector<CHAction*> actions;
   actions.push_back(new StackTraceCHAction(SmallString<128>("Print stacktrace to file")));
+  actions.push_back(new CreateIntTestCHAction(SmallString<128>("Generate interestingness test")));
   actions.push_back(new PrintDiagnosticCHAction(SmallString<128>("Print diagnostic information")));
 
   CR.makeChain(actions);

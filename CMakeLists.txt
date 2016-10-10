@@ -117,7 +117,7 @@ add_executable(errors src/ErrorDisplay.cpp
         src/BugReporter/CrashHandler.h
         src/BugReporter/CHAction.h
         src/BugReporter/StackTraceCHAction.cpp
-        src/BugReporter/StackTraceCHAction.h src/BugReporter/CHAction.cpp src/BugReporter/PrintDiagnosticCHAction.cpp src/BugReporter/PrintDiagnosticCHAction.h)
+        src/BugReporter/StackTraceCHAction.h src/BugReporter/CHAction.cpp src/BugReporter/PrintDiagnosticCHAction.cpp src/BugReporter/PrintDiagnosticCHAction.h src/BugReporter/CreateIntTestCHAction.cpp src/BugReporter/CreateIntTestCHAction.h)
 
 # Specify libraries or flags to use when linking a given target.
 target_link_libraries(ASTStatsPrinter ${ALL_LIBRARIES})
